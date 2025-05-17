@@ -4,8 +4,8 @@ import numpy as np
 from env.custom_hopper import *
 from stable_baselines3 import PPO, SAC
 
-def make_env(domain="target", distribution="uniform"):
-    return gym.make(f'CustomHopper-{domain}-v0', distribution=distribution)
+def make_env(domain="target", distribution="uniform", param=0.1):
+    return gym.make(f'CustomHopper-{domain}-v0', distribution=distribution, param=param)
 
 def train_and_evaluate(args):
     # Creazione degli ambienti separati per il training e il testing
