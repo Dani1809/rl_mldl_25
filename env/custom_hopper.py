@@ -12,7 +12,7 @@ from .mujoco_env import MujocoEnv
 
 
 class CustomHopper(MujocoEnv, utils.EzPickle):
-    def __init__(self, domain=None, param, distribution="uniform"):
+    def __init__(self, param, domain=None, distribution="uniform"):
         MujocoEnv.__init__(self, 4)
         utils.EzPickle.__init__(self)
 
