@@ -25,7 +25,7 @@ def train_and_evaluate(args):
 
     set_global_seed(SEED)
 
-    learning_rates = [1e-5, 3e-4, 1e-3]
+    learning_rates = [3e-4, 1e-3]
     clip_ranges = [0.1, 0.2, 0.3]
     n_steps_list = [1024, 2048, 4096]
 
