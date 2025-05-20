@@ -6,11 +6,23 @@ from env.custom_hopper import *
 from stable_baselines3 import PPO
 from stable_baselines3.common.evaluation import evaluate_policy
 
+SEED = 42
+def set_global_seed(seed):
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+
 def make_env(domain="target"):
-    return gym.make(f'CustomHopper-{domain}-v0')
+    env = gym.make(f'CustomHopper-{domain}-v0')
+    env.seed(SEED)
+    env.action_space.seed(SEED)
+    env.observation_space.seed(SEED)  
+    return env
 
 def train_and_evaluate(args):
-    # Definizione iperparametri per grid search
+
+    set_global_seed(SEED)
+
     learning_rates = [1e-5, 3e-4, 1e-3]
     clip_ranges = [0.1, 0.2, 0.3]
     n_steps_list = [1024, 2048, 4096]
@@ -32,6 +44,7 @@ def train_and_evaluate(args):
                 clip_range=clip,
                 n_steps=n_steps,
                 verbose=0,
+                seed=SEED
             )
             model.learn(total_timesteps=args.timesteps)
             model.save(model_name)
@@ -50,8 +63,17 @@ def train_and_evaluate(args):
             "std_reward": std_reward
         })
 
+
     # Ordina e stampa le top 3 configurazioni
     sorted_results = sorted(results, key=lambda x: x["mean_reward"], reverse=True)
+
+    csv_filename = "ppo_grid_search_results.csv"
+    with open(csv_filename, mode="w", newline="") as file:
+        writer = csv.DictWriter(file, fieldnames=sorted_results[0].keys())
+        writer.writeheader()
+        writer.writerows(sorted_results)
+
+    print(f"\n📁 Risultati salvati in: {csv_filename}")
     print("\n🏆 Top 3 Configurazioni:")
     for r in sorted_results[:3]:
         print(f"→ LR: {r['learning_rate']}, Clip: {r['clip_range']}, n_steps: {r['n_steps']} → Reward: {r['mean_reward']:.2f}")
