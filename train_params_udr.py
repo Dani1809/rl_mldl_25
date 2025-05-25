@@ -13,7 +13,7 @@ def set_global_seed(seed):
     np.random.seed(seed)
     torch.manual_seed(seed)
 
-def make_env(domain="target", distribution="uniform", param=0.1):
+def make_env(domain="target", distribution="uniform", param=None):
     env = gym.make(f'CustomHopper-{domain}-v0', distribution=distribution, param=param)
     env.seed(SEED)
     env.action_space.seed(SEED)
