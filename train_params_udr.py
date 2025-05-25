@@ -31,7 +31,7 @@ def train_and_evaluate(args):
         train_env = make_env(domain=args.train_domain, distribution=args.distribution, param=param)
 
         if args.train:
-            model = PPO("MlpPolicy", train_env, learning_rate=0.001, clip_range=0.1, n_steps=4096, verbose=0, seed=SEED)
+            model = PPO("MlpPolicy", train_env, learning_rate=0.0003, clip_range=0.1, n_steps=1024, verbose=0, seed=SEED)
             model.learn(total_timesteps=args.timesteps)
             model.save(model_name)
         else:
