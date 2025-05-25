@@ -24,6 +24,11 @@ def train_and_evaluate(args):
     set_global_seed(SEED)
     test_env = make_env(domain=args.test_domain, distribution="uniform")
     params = [0.1, 0.3, 0.5, 0.7, 1.0]
+    learning_rate=0.0003
+    clip_range=0.1
+    n_steps=1024
+    results_file = open(f"{args.train_domain}_{args.distribution}_{learning_rate}_{clip_range}_{n_steps}.txt", "w")
+    results_file.write("Param\tMean Reward\tStd Dev\n")
 
     for param in params:
         print(f"\n=== Training with param={param} ===")
@@ -31,7 +36,7 @@ def train_and_evaluate(args):
         train_env = make_env(domain=args.train_domain, distribution=args.distribution, param=param)
 
         if args.train:
-            model = PPO("MlpPolicy", train_env, learning_rate=0.0003, clip_range=0.1, n_steps=1024, verbose=0, seed=SEED)
+            model = PPO("MlpPolicy", train_env, learning_rate=learning_rate, clip_range=clip_range, n_steps=n_steps, verbose=0, seed=SEED)
             model.learn(total_timesteps=args.timesteps)
             model.save(model_name)
         else:
@@ -54,7 +59,9 @@ def train_and_evaluate(args):
                 i += 1
 
         print(f"→ Param: {param} | Media: {np.mean(rewards):.2f}, Dev Std: {np.std(rewards):.2f}")
+        results_file.write(f"{param}\t{np.mean(rewards):.2f}\t{np.std(rewards):.2f}\n")
 
+    results_file.close()
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train & evaluate PPO on CustomHopper")
     parser.add_argument("--train", action="store_true", help="Train a new model")
