@@ -25,7 +25,7 @@ def train_and_evaluate(args):
     test_env = make_env(domain=args.test_domain, distribution="uniform")
     params = [0.1, 0.3, 0.5, 0.7, 1.0]
     learning_rate=0.001
-    clip_range=0.2
+    clip_range=0.1
     n_steps=4096
     results_file = open(f"{args.train_domain}_{args.distribution}_{learning_rate}_{clip_range}_{n_steps}.txt", "w")
     results_file.write("Param\tMean Reward\tStd Dev\n")
